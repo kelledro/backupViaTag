@@ -21,9 +21,9 @@ Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months
 
 `backupViaTag -b -t Backup:ProductionWeekly -e "+6 months"`
 
-Command to purge AMIs and their associated snapshots once they have expired
+Command to purge AMIs and their associated snapshots once they have expired. The `-a` paramter is your AWS Account ID
 
-`backupViaTag -p`
+`backupViaTag -p -a 123456789012`
 
 ### Tagging instances
 
@@ -45,7 +45,7 @@ Cron jobs for the above example look like:
 0 3  *  *  *  7 ec2-user backupViaTag -b -t Backup:ProductionWeekly -e "+6 months"
 
 # Daily job at 1am to purge expired images and remove their associated snapshots
-0 1  *  *  *  * ec2-user backupViaTag -p
+0 1  *  *  *  * ec2-user backupViaTag -p -a 123456789012
 ```
 
 ## Requirements
