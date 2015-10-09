@@ -1,0 +1,100 @@
+#!/bin/bash
+
+# Usage guidance
+function usage {
+	echo
+	echo -e "Usage: $0 -t tag -e expiry -a account"
+	echo
+	echo -e "Parameters:"
+	echo
+	echo -e "\t-t \t The tag key:value of instances to be backed up (eg. Backup:Production)"
+	echo -e "\t-e \t Time before the AMI expires (eg. \"+30 days\", \"+1 week\", \"never\" - quotes included)"
+	echo
+	echo -e "Examples:"
+	echo -e "\t $0 -t Backup:shortTerm -e \"+7 days\""
+	echo -e "\t $0 -t environment:prod -e \"+3 months\""
+	echo
+	exit 1
+}
+
+# Manage parameters
+while getopts ":t:e:h" opt
+do
+	case $opt in
+		t) tagKey=$(echo $OPTARG | cut -d ":" -f 1)
+		   tagValue=$(echo $OPTARG | cut -d ":" -f 2);;
+		e) if [ "$OPTARG" == "never" ]
+			then
+				expire="$OPTARG"
+			else
+				expire=$(date --date="$OPTARG")
+			fi;;
+		h) usage;;
+		*) usage;;
+	esac
+done
+
+# Get the account id from the running instance meta-data for use when filtering images
+account=$(aws ec2 describe-instances --output text --instance-id `curl -s http://169.254.169.254/latest/meta-data/instance-id` --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | rev | cut -c 2- | rev) --query 'Reservations[0].{AccoundID:OwnerId}')
+
+# Get up to date list of regions
+regions=$(aws ec2 describe-regions --region us-east-1 --output text --query 'Regions[*].{name:RegionName}')
+
+# Loop through regions
+for region in $regions; do
+
+	# Get list of instances to be backed up
+	instances=$(aws ec2 describe-instances --output text --region $region --filters "Name=tag:$tagKey,Values=$tagValue" --query 'Reservations[*].Instances[*].{ID:InstanceId}')
+
+	# Loop through instances creating images and tagging
+	for instance in $instances; do
+
+		# Check for reboot tag
+		if [ "`aws ec2 describe-instances --output text --region $region --instance-id $instance --filters "Name=tag:BackupReboot,Values=yes"`" != "" ]
+		then
+			reboot="--reboot"
+		else
+			reboot="--no-reboot"
+		fi
+		echo [$region] Creating image from $instance with $reboot
+		ami=$(aws ec2 create-image --output text $reboot --region $region --instance-id $instance --name "`date +%Y%m%d%H%M%S` $instance" --description "Backup of $instance")
+		echo [$region] Tagging $ami
+		aws ec2 create-tags --region $region --tags "Key=expire,Value=$expire" "Key=CreatedBy,Value=backupViaTag" "Key=Name,Value=`date "+%Y/%m/%d %H:%M:%S"` Backup of $instance" --resources $ami
+	done
+
+	# Get list of images that have expired
+	images=$(aws ec2 describe-images --output text --region $region --filters Name=owner-id,Values=$account Name=tag:CreatedBy,Values=backupViaTag --query 'Images[*].{id:ImageId}')
+
+	# Loop through images, finding corresponding snapshots, deregistering AMIs and deleting snapshots
+	for image in $images; do
+
+		# Get expire date
+		expiretag=$(aws ec2 describe-images --output text --region $region --image-id $image --query 'Images[*].Tags[*]' | grep expire | cut -d " " -f 2-)
+
+		# Check if image should never be deleted
+		if [ "$expiretag" != "expire	never" ] # ToDo: weird string required because "cut" doesnt work when tag = "never"
+		then
+			# Convert expire tag to int
+			expiredate=$(date --date="$expiretag" +%s)
+
+			# If expire tag is before now
+			if [ "$expiredate" -le "$(date +%s)" ]
+			then
+
+				# Get snapshots associated with AMI
+				snaps=$(aws ec2 describe-images --output text --region $region --image-id $image --query 'Images[*].BlockDeviceMappings[*].{"":Ebs.{SnapID:SnapshotId}}')
+				echo [$region] Deregistering $image
+
+				# Deregister image
+				aws ec2 deregister-image --region $region --image-id $image
+
+				# Delete snapshots
+				for snap in $snaps; do
+					echo [$region] Deleting $snap
+					aws ec2 delete-snapshot --region $region --snapshot-id $snap
+				done
+			fi
+		fi
+	done
+done
+
