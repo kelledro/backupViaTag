@@ -26,7 +26,7 @@ Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months:
 
 Backup instances tagged VeryImportant:KeepBackups for ever:
 
-`backupViaTag -t VeryImportant:KeepBackups -e "never"
+`backupViaTag -t VeryImportant:KeepBackups -e "never"`
 
 ### Tagging instances
 
