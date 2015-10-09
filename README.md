@@ -16,13 +16,17 @@ Each time the script is run, it will look for expired backups and remove them. T
 
 ## Usage
 ### Quick examples
-Backup instances tagged Backup:ProductionDaily with an expiry of 30 days
+Backup instances tagged Backup:ProductionDaily with an expiry of 30 days:
 
 `backupViaTag -t Backup:ProductionDaily -e "+30 days"`
 
-Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months
+Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months:
 
 `backupViaTag -t Backup:ProductionWeekly -e "+6 months"`
+
+Backup instances tagged VeryImportant:KeepBackups for ever:
+
+`backupViaTag -t VeryImportant:KeepBackups -e "never"
 
 ### Tagging instances
 
