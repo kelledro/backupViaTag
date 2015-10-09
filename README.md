@@ -77,6 +77,14 @@ This script requires several IAM permissions to operate. The recommended method 
 }
 ```
 #### CLI command to create IAM policy
+```
+aws iam create-policy --policy-name backupViaTagPolicy \
+--policy-document "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\": \
+\"backupViaTagPolicy\",\"Effect\": \"Allow\",\"Action\": \
+[\"ec2:CreateImage\",\"ec2:CreateTags\",\"ec2:DeleteSnapshot\", \
+\"ec2:DeregisterImage\",\"ec2:DescribeImages\",\"ec2:DescribeInstances\", \
+\"ec2:DescribeRegions\"],\"Resource\":[\"*\"]}]}"
+```
 
 #### CLI command to create IAM role
 
