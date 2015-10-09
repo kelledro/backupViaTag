@@ -11,19 +11,18 @@ Using different tags allows for a variety of backup schedules and retention peri
 ### Optional reboot
 By default the script will not reboot instances when it creates the backup. If you have an instance that requires a reboot to ensure filesystem integrity, you can add the tag BackupReboot:yes to the instance. Read more about about the `--no-reboot` option here - http://docs.aws.amazon.com/cli/latest/reference/ec2/create-image.html
 
+### Automatic purge
+Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged.
+
 ## Usage
 ### Quick examples
 Backup instances tagged Backup:ProductionDaily with an expiry of 30 days
 
-`backupViaTag -b -t Backup:ProductionDaily -e "+30 days"`
+`backupViaTag -t Backup:ProductionDaily -e "+30 days"`
 
 Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months
 
-`backupViaTag -b -t Backup:ProductionWeekly -e "+6 months"`
-
-Command to purge AMIs and their associated snapshots once they have expired. The `-a` paramter is your AWS Account ID
-
-`backupViaTag -p -a 123456789012`
+`backupViaTag -t Backup:ProductionWeekly -e "+6 months"`
 
 ### Tagging instances
 
@@ -39,13 +38,11 @@ Cron jobs for the above example look like:
 # *  *  *  *  * user-name command to be executed
 
 # Daily backup at 11pm for instances tagged Backup:ProductionDaily with an expiry of 30 days
-0 23 *  *  *  * ec2-user backupViaTag -b -t Backup:ProductionDaily -e "+30 days"
+0 23 *  *  *  * ec2-user backupViaTag -t Backup:ProductionDaily -e "+30 days"
 
 # Weekly backup on Sunday at 3am for instances tagged Backup:ProductionWeekly with an expiry of 6 months
-0 3  *  *  *  7 ec2-user backupViaTag -b -t Backup:ProductionWeekly -e "+6 months"
+0 3  *  *  *  7 ec2-user backupViaTag -t Backup:ProductionWeekly -e "+6 months"
 
-# Daily job at 1am to purge expired images and remove their associated snapshots
-0 1  *  *  *  * ec2-user backupViaTag -p -a 123456789012
 ```
 
 ## Requirements
