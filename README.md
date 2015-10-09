@@ -118,4 +118,8 @@ aws ec2 run-instances --region ap-southeast-2 \
   --iam-instance-profile "Name=backupViaTagProfile" \
   --key-name myKeypair 
 ```
-
+## TODO
+- Tighten up parameter checking
+- Implement CloudFormation template that:
+  - Creates IAM policies, roles and profiles
+  - Creates a datapipeline with a schedule based on user input that executes the script 
