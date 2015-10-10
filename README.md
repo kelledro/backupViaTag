@@ -33,11 +33,7 @@ Backup instances tagged VeryImportant:KeepBackups and keep them forever:
 ### Tagging instances
 Instances can be tagged using the EC2 Console. Select the instance in the instance list and on the bottom pane choose the "Tags" tab. From there you can add new tags for instances you want backed up or even multiple tags to have an instance covered by more than one backup schedule. Eg:
 
-| Key     | Value            |
-| ------- | ---------------- |
-| Name    | prodWebServer    |
-| Backup  | ProductionDaily  |
-| Backup  | ProductionWeekly |
+![tags](https://cloud.githubusercontent.com/assets/15039809/10413501/eaab2e02-6ff6-11e5-9ee6-1a9a5d1a3958.png)
 
 You can also create a tag of BackupReboot:yes to tell backupsViaTag to reboot the instance when creating the AMI to ensure filesystem integrity. 
 
