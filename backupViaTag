@@ -46,7 +46,7 @@ account=$(aws ec2 describe-instances --output text --instance-id `curl -s http:/
 
 # Get up to date list of regions
 regions=$(aws ec2 describe-regions --region us-east-1 --output text --query 'Regions[*].{name:RegionName}')
-regions="us-west-2"
+
 # Loop through regions
 for region in $regions; do
 	echo
