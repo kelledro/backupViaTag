@@ -91,7 +91,7 @@ This script requires several IAM permissions to operate. The recommended method 
     ]
 }
 ```
-#### CLI command to create IAM policy
+#### CLI command to create IAM policy the above policy
 ```
 aws iam create-policy --policy-name backupViaTagPolicy \
   --policy-document "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\": \
