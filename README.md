@@ -2,7 +2,7 @@
 Create Amazon Machine Images (AMIs) based on tags assigned to instances
 
 ## Summary
-This script will create backups of instances in all regions that have a tag that matches key:value (eg: Key=Backup, Value=Production). This allows you configure the backups via the tags on the instances themselves, rather than having to edit a list of instances to be backed up. The script also creates an expiration tag on the AMIs so they can later be deleted. 
+This script will create backups of instances in all regions that have a tag that matches key:value (eg: Key=Backup, Value=Production). This allows you configure the backups via the tags on the instances themselves, rather than having to maintain a list of instances to be backed up. The script also creates an expiration tag on the AMIs so they can later be deleted. 
 
 ## Features
 ### Tag Based
