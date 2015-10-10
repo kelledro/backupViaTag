@@ -13,6 +13,7 @@ By default the script will not reboot instances when it creates the backup. If y
 
 ### Automatic purge
 Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged. If you want to run a purge job without creating any backups you can just specific a non-existent tag. The `-e` flag has no impact. Eg:
+
 `backupViaTag -t thisCrazyTag:DoesntExist -e "+10000 days"`
 
 ## Usage
