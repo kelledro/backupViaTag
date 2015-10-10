@@ -46,49 +46,25 @@ account=$(aws ec2 describe-instances --output text --instance-id `curl -s http:/
 
 # Get up to date list of regions
 regions=$(aws ec2 describe-regions --region us-east-1 --output text --query 'Regions[*].{name:RegionName}')
-
+regions="us-west-2"
 # Loop through regions
 for region in $regions; do
 	echo
 	echo ---[$region]---
-
-	# Get list of instances to be backed up
-	instances=$(aws ec2 describe-instances --output text --region $region --filters "Name=tag:$tagKey,Values=$tagValue" --query 'Reservations[*].Instances[*].{ID:InstanceId}')
-
-	if [ "$instances" == "" ]
-	then
-		echo No instances with tag $tagKey:$tagValue found
-	else	
-		# Loop through instances creating images and tagging
-		for instance in $instances; do
-
-			# Check for reboot tag
-			if [ "`aws ec2 describe-instances --output text --region $region --instance-id $instance --filters "Name=tag:BackupReboot,Values=yes"`" != "" ]
-			then
-				reboot="--reboot"
-			else
-				reboot="--no-reboot"
-			fi
-			echo Creating image from $instance with $reboot
-			ami=$(aws ec2 create-image --output text $reboot --region $region --instance-id $instance --name "`date +%Y%m%d%H%M%S` $instance" --description "Backup of $instance")
-			echo "  Tagging image of $instance: $ami"
-			aws ec2 create-tags --region $region --tags "Key=expire,Value=$expire" "Key=CreatedBy,Value=backupViaTag" "Key=Name,Value=`date "+%Y/%m/%d %H:%M:%S"` Backup of $instance" --resources $ami
-		done
-	fi
 
 	# Get list of images that have expired
 	images=$(aws ec2 describe-images --output text --region $region --filters Name=owner-id,Values=$account Name=tag:CreatedBy,Values=backupViaTag --query 'Images[*].{id:ImageId}')
 
 	if [ "$images" == "" ]
 	then
-		echo No expired images found
+		echo $(date +"%H:%M:%S -") No images found
 	else
 
 		# Loop through images, finding corresponding snapshots, deregistering AMIs and deleting snapshots
 		for image in $images; do
 
 			# Get expire date
-			expiretag=$(aws ec2 describe-images --output text --region $region --image-id $image --query 'Images[*].Tags[*]' | grep expire | sed -e 's/expire\s\(.*\)/\1/')
+			expiretag=$(aws ec2 describe-images --output text --region $region --image-id $image --query 'Images[*].Tags[*]' | grep Expire | sed -e 's/Expire\s\(.*\)/\1/')
 
 			# Check if image should never be deleted
 			if [ "$expiretag" != "never" ] 
@@ -102,21 +78,47 @@ for region in $regions; do
 
 					# Get snapshots associated with AMI
 					snaps=$(aws ec2 describe-images --output text --region $region --image-id $image --query 'Images[*].BlockDeviceMappings[*].{"":Ebs.{SnapID:SnapshotId}}')
-					echo Deregistering $image
+					echo $(date +"%H:%M:%S -") Deregistering $image
 
 					# Deregister image
 					aws ec2 deregister-image --region $region --image-id $image
 
 					# Delete snapshots
 					for snap in $snaps; do
-						echo "  Deleting $snap"
+						echo "$(date +"%H:%M:%S -")    Deleting $snap"
 						aws ec2 delete-snapshot --region $region --snapshot-id $snap
 					done
 				else
-					echo $image doesn\'t expire until $expiretag
+					echo $(date +"%H:%M:%S -") $image doesn\'t expire until $expiretag
 				fi
 			fi
 		done
 	fi
+
+	# Get list of instances to be backed up
+	instances=$(aws ec2 describe-instances --output text --region $region --filters "Name=tag:$tagKey,Values=$tagValue" --query 'Reservations[*].Instances[*].{ID:InstanceId}')
+
+	if [ "$instances" == "" ]
+	then
+		echo $(date +"%H:%M:%S -") No instances with tag $tagKey:$tagValue found
+	else	
+		# Loop through instances creating images and tagging
+		for instance in $instances; do
+
+			# Check for reboot tag
+			if [ "`aws ec2 describe-instances --output text --region $region --instance-id $instance --filters "Name=tag:BackupReboot,Values=yes"`" != "" ]
+			then
+				reboot="--reboot"
+			else
+				reboot="--no-reboot"
+			fi
+			echo $(date +"%H:%M:%S -") Creating image from $instance with $reboot
+			ami=$(aws ec2 create-image --output text $reboot --region $region --instance-id $instance --name "`date +%Y%m%d%H%M%S` $instance" --description "Backup of $instance")
+
+			echo "$(date +"%H:%M:%S -")    Tagging image of $instance: $ami"
+			aws ec2 create-tags --region $region --tags "Key=Expire,Value=$expire" "Key=CreatedBy,Value=backupViaTag" "Key=Name,Value=`date "+%Y/%m/%d %H:%M:%S"` Backup of $instance" --resources $ami
+		done
+	fi
+
 done
 
