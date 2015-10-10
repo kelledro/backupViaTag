@@ -12,19 +12,34 @@ Using different tags allows for a variety of backup schedules and retention peri
 By default the script will not reboot instances when it creates the backup. If you have an instance that requires a reboot to ensure filesystem integrity, you can add the tag BackupReboot:yes to the instance. Read more about about the `--no-reboot` option here - http://docs.aws.amazon.com/cli/latest/reference/ec2/create-image.html
 
 ### Automatic purge
-Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged.
+Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged. If you want to run a purge job without creating any backups you can just specific a non-existent tag. The `-e` flag has no impact. Eg:
+
+`backupViaTag -t thisCrazyTag:DoesntExist -e "+10000 days"`
 
 ## Usage
 ### Quick examples
-Backup instances tagged Backup:ProductionDaily with an expiry of 30 days
+Backup instances tagged Backup:ProductionDaily with an expiry of 30 days:
 
 `backupViaTag -t Backup:ProductionDaily -e "+30 days"`
 
-Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months
+Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months:
 
 `backupViaTag -t Backup:ProductionWeekly -e "+6 months"`
 
+Backup instances tagged VeryImportant:KeepBackups and keep them forever:
+
+`backupViaTag -t VeryImportant:KeepBackups -e "never"`
+
 ### Tagging instances
+Instances can be tagged using the EC2 Console. Select the instance in the instance list and on the bottom pane choose the "Tags" tab. From there you can add new tags for instances you want backed up or even multiple tags to have an instance covered by more than one backup schedule. Eg:
+
+| Key     | Value            |
+| ------- | ---------------- |
+| Name    | prodWebServer    |
+| Backup  | ProductionDaily  |
+| Backup  | ProductionWeekly |
+
+You can also create a tag of BackupReboot:yes to tell backupsViaTag to reboot the instance when creating the AMI to ensure filesystem integrity. 
 
 ### Scheduling
 Cron jobs for the above example look like:
@@ -76,7 +91,7 @@ This script requires several IAM permissions to operate. The recommended method 
     ]
 }
 ```
-#### CLI command to create IAM policy
+#### CLI command to create IAM policy the above policy
 ```
 aws iam create-policy --policy-name backupViaTagPolicy \
   --policy-document "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\": \
@@ -105,7 +120,8 @@ aws iam create-instance-profile --instance-profile-name backupViaTagProfile`
 ```
 #### CLI command to add the role to the profile
 ```
-aws iam add-role-to-instance-profile --instance-profile-name backupViaTagProfile --role-name backupViaTagRole
+aws iam add-role-to-instance-profile --instance-profile-name backupViaTagProfile \
+    --role-name backupViaTagRole
 ```
 #### CLI command to launch an instance using the IAM role 
 ```
@@ -114,4 +130,8 @@ aws ec2 run-instances --region ap-southeast-2 \
   --iam-instance-profile "Name=backupViaTagProfile" \
   --key-name myKeypair 
 ```
-
+## TODO
+- Implement CloudFormation template that:
+  - Creates IAM policies, roles and profiles
+  - Creates a datapipeline with a schedule based on user input that executes the script 
+- Some kind of notification option(s)
