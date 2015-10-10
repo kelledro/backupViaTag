@@ -12,7 +12,8 @@ Using different tags allows for a variety of backup schedules and retention peri
 By default the script will not reboot instances when it creates the backup. If you have an instance that requires a reboot to ensure filesystem integrity, you can add the tag BackupReboot:yes to the instance. Read more about about the `--no-reboot` option here - http://docs.aws.amazon.com/cli/latest/reference/ec2/create-image.html
 
 ### Automatic purge
-Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged.
+Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged. If you want to run a purge job without creating any backups you can just specific a non-existent tag. The `-e` flag has no impact. Eg:
+`backupViaTag -t thisCrazyTag:DoesntExist -e "+10000 days"`
 
 ## Usage
 ### Quick examples
@@ -36,6 +37,8 @@ Instances can be tagged using the EC2 Console. Select the instance in the instan
 | Name    | prodWebServer    |
 | Backup  | ProductionDaily  |
 | Backup  | ProductionWeekly |
+
+You can also create a tag of BackupReboot:yes to tell backupsViaTag to reboot the instance when creating the AMI to ensure filesystem integrity. 
 
 ### Scheduling
 Cron jobs for the above example look like:
@@ -127,7 +130,6 @@ aws ec2 run-instances --region ap-southeast-2 \
   --key-name myKeypair 
 ```
 ## TODO
-- Tighten up parameter checking
 - Implement CloudFormation template that:
   - Creates IAM policies, roles and profiles
   - Creates a datapipeline with a schedule based on user input that executes the script 
