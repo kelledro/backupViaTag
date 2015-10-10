@@ -57,7 +57,7 @@ for region in $regions; do
 
 	if [ "$images" == "" ]
 	then
-		echo $(date +"%H:%M:%S -") No images found
+		echo $(date +"%H:%M:%S -") No expired images found
 	else
 
 		# Loop through images, finding corresponding snapshots, deregistering AMIs and deleting snapshots
