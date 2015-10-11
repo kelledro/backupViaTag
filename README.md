@@ -14,28 +14,31 @@ By default the script will not reboot instances when it creates the backup. If y
 ### Automatic purge
 Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged. If you want to run a purge job without creating any backups you can just specific a non-existent tag. The `-e` flag has no impact. Eg:
 
-`backupViaTag -t thisCrazyTag:DoesntExist -e "+10000 days"`
+`backupViaTag -t thisCrazyTag:DoesntExist -e "10000 days"`
 
 ## Usage
 ### Quick examples
 Backup instances tagged Backup:ProductionDaily with an expiry of 30 days:
 
-`backupViaTag -t Backup:ProductionDaily -e "+30 days"`
+`backupViaTag -t Backup:ProductionDaily -e "30 days"`
 
 Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months:
 
-`backupViaTag -t Backup:ProductionWeekly -e "+6 months"`
+`backupViaTag -t Backup:ProductionWeekly -e "6 months"`
 
 Backup instances tagged VeryImportant:KeepBackups and keep them forever:
 
 `backupViaTag -t VeryImportant:KeepBackups -e "never"`
+
+The syntax for the time until expiry follows the GNU date tool:
+https://www.gnu.org/software/coreutils/manual/html_node/Examples-of-date.html
 
 ### Tagging instances
 Instances can be tagged using the EC2 Console. Select the instance in the instance list and on the bottom pane choose the "Tags" tab. From there you can add new tags for instances you want backed up or even multiple tags to have an instance covered by more than one backup schedule. Eg:
 
 ![tags](https://cloud.githubusercontent.com/assets/15039809/10413501/eaab2e02-6ff6-11e5-9ee6-1a9a5d1a3958.png)
 
-You can also create a tag of BackupReboot:yes to tell backupsViaTag to reboot the instance when creating the AMI to ensure filesystem integrity. 
+You can also create a tag of **BackupReboot:yes** to tell backupsViaTag to reboot the instance when creating the AMI to ensure filesystem integrity. 
 
 ### Scheduling
 Cron jobs for the above example look like:
@@ -87,7 +90,7 @@ This script requires several IAM permissions to operate. The recommended method 
     ]
 }
 ```
-#### CLI command to create IAM policy the above policy
+#### CLI command to create the above IAM policy
 ```
 aws iam create-policy --policy-name backupViaTagPolicy \
   --policy-document "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\": \
