@@ -12,7 +12,7 @@ Using different tags allows for a variety of backup schedules and retention peri
 By default the script will not reboot instances when it creates the backup. If you have an instance that requires a reboot to ensure filesystem integrity, you can add the tag BackupReboot:yes to the instance. Read more about about the `--no-reboot` option here - http://docs.aws.amazon.com/cli/latest/reference/ec2/create-image.html
 
 ### Automatic purge
-Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged. If you want to run a purge job without creating any backups you can just specific a non-existent tag. The `-e` flag has no impact. Eg:
+Each time the script is run, it will look for expired backups and remove them. This means that if you schedule backupViaTag to create daily backups, it will also run the purge job daily. Only backups that have expired will actually be purged. If you want to run a purge job without creating any backups you can just specify a non-existent tag. The `-e` flag has no impact in this scenario. Eg:
 
 `backupViaTag -t thisCrazyTag:DoesntExist -e "10000 days"`
 
@@ -20,11 +20,11 @@ Each time the script is run, it will look for expired backups and remove them. T
 ### Quick examples
 Backup instances tagged Backup:ProductionDaily with an expiry of 30 days:
 
-`backupViaTag -t Backup:ProductionDaily -e "30 days"`
+`backupViaTag -t Backup:prodDaily -e "30 days"`
 
 Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months:
 
-`backupViaTag -t Backup:ProductionWeekly -e "6 months"`
+`backupViaTag -t Backup:prodWeekly -e "6 months"`
 
 Backup instances tagged VeryImportant:KeepBackups and keep them forever:
 
@@ -52,10 +52,10 @@ Cron jobs for the above example look like:
 # *  *  *  *  * user-name command to be executed
 
 # Daily backup at 11pm for instances tagged Backup:ProductionDaily with an expiry of 30 days
-0 23 *  *  *  * ec2-user backupViaTag -t Backup:ProductionDaily -e "+30 days"
+0 23 *  *  *  * ec2-user backupViaTag -t Backup:prodDaily -e "+30 days"
 
 # Weekly backup on Sunday at 3am for instances tagged Backup:ProductionWeekly with an expiry of 6 months
-0 3  *  *  *  7 ec2-user backupViaTag -t Backup:ProductionWeekly -e "+6 months"
+0 3  *  *  *  7 ec2-user backupViaTag -t Backup:prodWeekly -e "+6 months"
 
 ```
 
@@ -115,7 +115,7 @@ aws iam attach-role-policy --role-name backupViaTagRole \
 ```
 #### CLI command to create an instance profile
 ```
-aws iam create-instance-profile --instance-profile-name backupViaTagProfile`
+aws iam create-instance-profile --instance-profile-name backupViaTagProfile
 ```
 #### CLI command to add the role to the profile
 ```
