@@ -115,7 +115,7 @@ aws iam attach-role-policy --role-name backupViaTagRole \
 ```
 #### CLI command to create an instance profile
 ```
-aws iam create-instance-profile --instance-profile-name backupViaTagProfile`
+aws iam create-instance-profile --instance-profile-name backupViaTagProfile
 ```
 #### CLI command to add the role to the profile
 ```
