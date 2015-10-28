@@ -1,0 +1,176 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+        "amiInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "config": {
+                        "files": {
+                            "/tmp/backupViaTag-base64": {
+                                "content": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "IyEvYmluL2Jhc2gKCiMgVXNhZ2UgZ3VpZGFuY2UKZnVuY3Rpb24gdXNhZ2UgewoJZWNobwoJZWNo\n",
+                                            "byAtZSAiVXNhZ2U6ICQwIC10IHRhZyAtZSBleHBpcnkiCgllY2hvCgllY2hvIC1lICJQYXJhbWV0\n",
+                                            "ZXJzOiIKCWVjaG8gLWUgIlx0LXQgXHQgVGhlIHRhZyBrZXk6dmFsdWUgb2YgaW5zdGFuY2VzIHRv\n",
+                                            "IGJlIGJhY2tlZCB1cCAoZWcuIEJhY2t1cDpQcm9kdWN0aW9uKSIKCWVjaG8gLWUgIlx0LWUgXHQg\n",
+                                            "VGltZSBiZWZvcmUgdGhlIEFNSSBleHBpcmVzIChlZy4gXCIzMCBkYXlzXCIsIFwiMSB3ZWVrXCIs\n",
+                                            "IFwibmV2ZXJcIiAtIHF1b3RlcyBpbmNsdWRlZCkiCgllY2hvCgllY2hvIC1lICJFeGFtcGxlczoi\n",
+                                            "CgllY2hvIC1lICJcdCAkMCAtdCBCYWNrdXA6c2hvcnRUZXJtIC1lIFwiNyBkYXlzXCIiCgllY2hv\n",
+                                            "IC1lICJcdCAkMCAtdCBlbnZpcm9ubWVudDpwcm9kIC1lIFwiMyBtb250aHMgMTAgZGF5c1wiIgoJ\n",
+                                            "ZWNobyAtZSAiXHQgJDAgLXQgaW1wb3J0YW50OnJldGFpbiAtZSBcIm5ldmVyXCIiCgllY2hvCgll\n",
+                                            "eGl0IDEKfQoKIyBNYW5hZ2UgcGFyYW1ldGVycwpPUFRJTkQ9CndoaWxlIGdldG9wdHMgIjp0OmU6\n",
+                                            "aCIgb3B0CmRvCgljYXNlICRvcHQgaW4KCQl0KSB0YWdLZXk9JChlY2hvICRPUFRBUkcgfCBjdXQg\n",
+                                            "LWQgIjoiIC1mIDEpCgkJICAgdGFnVmFsdWU9JChlY2hvICRPUFRBUkcgfCBjdXQgLWQgIjoiIC1m\n",
+                                            "IDIpOzsKCQllKSBpZiBbICIkT1BUQVJHIiA9PSAibmV2ZXIiIF0KCQkJdGhlbgoJCQkJZXhwaXJl\n",
+                                            "PSIkT1BUQVJHIgoJCQllbHNlCgkJCQlleHBpcmU9JChkYXRlIC0tZGF0ZT0iJE9QVEFSRyIpCgkJ\n",
+                                            "CWZpOzsKCQloKSB1c2FnZTs7CgkJKikgdXNhZ2U7OwoJZXNhYwpkb25lCgojIEJhaWwgaWYgdGhl\n",
+                                            "cmUgYXJlbid0IHRoZSBjb3JyZWN0IG51bWJlciBvZiBhcmdzCmlmIFsgJE9QVElORCAtbmUgNSBd\n",
+                                            "CnRoZW4KCXVzYWdlCglleGl0IDEKZmkKCiMgR2V0IHRoZSBhY2NvdW50IGlkIGZyb20gdGhlIHJ1\n",
+                                            "bm5pbmcgaW5zdGFuY2UgbWV0YS1kYXRhIGZvciB1c2Ugd2hlbiBmaWx0ZXJpbmcgaW1hZ2VzCmFj\n",
+                                            "Y291bnQ9JChhd3MgZWMyIGRlc2NyaWJlLWluc3RhbmNlcyAtLW91dHB1dCB0ZXh0IC0taW5zdGFu\n",
+                                            "Y2UtaWQgYGN1cmwgLXMgaHR0cDovLzE2OS4yNTQuMTY5LjI1NC9sYXRlc3QvbWV0YS1kYXRhL2lu\n",
+                                            "c3RhbmNlLWlkYCAtLXJlZ2lvbiAkKGN1cmwgLXMgaHR0cDovLzE2OS4yNTQuMTY5LjI1NC9sYXRl\n",
+                                            "c3QvbWV0YS1kYXRhL3BsYWNlbWVudC9hdmFpbGFiaWxpdHktem9uZSB8IHJldiB8IGN1dCAtYyAy\n",
+                                            "LSB8IHJldikgLS1xdWVyeSAnUmVzZXJ2YXRpb25zWzBdLntBY2NvdW5kSUQ6T3duZXJJZH0nKQoK\n",
+                                            "IyBHZXQgdXAgdG8gZGF0ZSBsaXN0IG9mIHJlZ2lvbnMKcmVnaW9ucz0kKGF3cyBlYzIgZGVzY3Jp\n",
+                                            "YmUtcmVnaW9ucyAtLXJlZ2lvbiB1cy1lYXN0LTEgLS1vdXRwdXQgdGV4dCAtLXF1ZXJ5ICdSZWdp\n",
+                                            "b25zWypdLntuYW1lOlJlZ2lvbk5hbWV9JykKCiMgTG9vcCB0aHJvdWdoIHJlZ2lvbnMKZm9yIHJl\n",
+                                            "Z2lvbiBpbiAkcmVnaW9uczsgZG8KCWVjaG8KCWVjaG8gLS0tWyRyZWdpb25dLS0tCgoJIyBHZXQg\n",
+                                            "bGlzdCBvZiBpbWFnZXMgdGhhdCBoYXZlIGV4cGlyZWQKCWltYWdlcz0kKGF3cyBlYzIgZGVzY3Jp\n",
+                                            "YmUtaW1hZ2VzIC0tb3V0cHV0IHRleHQgLS1yZWdpb24gJHJlZ2lvbiAtLWZpbHRlcnMgTmFtZT1v\n",
+                                            "d25lci1pZCxWYWx1ZXM9JGFjY291bnQgTmFtZT10YWc6Q3JlYXRlZEJ5LFZhbHVlcz1iYWNrdXBW\n",
+                                            "aWFUYWcgLS1xdWVyeSAnSW1hZ2VzWypdLntpZDpJbWFnZUlkfScpCgoJaWYgWyAiJGltYWdlcyIg\n",
+                                            "PT0gIiIgXQoJdGhlbgoJCWVjaG8gJChkYXRlICsiJUg6JU06JVMgLSIpIE5vIGV4cGlyZWQgaW1h\n",
+                                            "Z2VzIGZvdW5kCgllbHNlCgoJCSMgTG9vcCB0aHJvdWdoIGltYWdlcywgZmluZGluZyBjb3JyZXNw\n",
+                                            "b25kaW5nIHNuYXBzaG90cywgZGVyZWdpc3RlcmluZyBBTUlzIGFuZCBkZWxldGluZyBzbmFwc2hv\n",
+                                            "dHMKCQlmb3IgaW1hZ2UgaW4gJGltYWdlczsgZG8KCgkJCSMgR2V0IGV4cGlyZSBkYXRlCgkJCWV4\n",
+                                            "cGlyZXRhZz0kKGF3cyBlYzIgZGVzY3JpYmUtaW1hZ2VzIC0tb3V0cHV0IHRleHQgLS1yZWdpb24g\n",
+                                            "JHJlZ2lvbiAtLWltYWdlLWlkICRpbWFnZSAtLXF1ZXJ5ICdJbWFnZXNbKl0uVGFnc1sqXScgfCBn\n",
+                                            "cmVwIEV4cGlyZSB8IHNlZCAtZSAncy9FeHBpcmVcc1woLipcKS9cMS8nKQoKCQkJIyBDaGVjayBp\n",
+                                            "ZiBpbWFnZSBzaG91bGQgbmV2ZXIgYmUgZGVsZXRlZAoJCQlpZiBbICIkZXhwaXJldGFnIiAhPSAi\n",
+                                            "bmV2ZXIiIF0gCgkJCXRoZW4KCQkJCSMgQ29udmVydCBleHBpcmUgdGFnIHRvIGludAoJCQkJZXhw\n",
+                                            "aXJlZGF0ZT0kKGRhdGUgLS1kYXRlPSIkZXhwaXJldGFnIiArJXMpCgoJCQkJIyBJZiBleHBpcmUg\n",
+                                            "dGFnIGlzIGJlZm9yZSBub3cKCQkJCWlmIFsgIiRleHBpcmVkYXRlIiAtbGUgIiQoZGF0ZSArJXMp\n",
+                                            "IiBdCgkJCQl0aGVuCgoJCQkJCSMgR2V0IHNuYXBzaG90cyBhc3NvY2lhdGVkIHdpdGggQU1JCgkJ\n",
+                                            "CQkJc25hcHM9JChhd3MgZWMyIGRlc2NyaWJlLWltYWdlcyAtLW91dHB1dCB0ZXh0IC0tcmVnaW9u\n",
+                                            "ICRyZWdpb24gLS1pbWFnZS1pZCAkaW1hZ2UgLS1xdWVyeSAnSW1hZ2VzWypdLkJsb2NrRGV2aWNl\n",
+                                            "TWFwcGluZ3NbKl0ueyIiOkVicy57U25hcElEOlNuYXBzaG90SWR9fScpCgkJCQkJZWNobyAkKGRh\n",
+                                            "dGUgKyIlSDolTTolUyAtIikgRGVyZWdpc3RlcmluZyBleHBpcmVkICRpbWFnZQoKCQkJCQkjIERl\n",
+                                            "cmVnaXN0ZXIgaW1hZ2UKCQkJCQlhd3MgZWMyIGRlcmVnaXN0ZXItaW1hZ2UgLS1yZWdpb24gJHJl\n",
+                                            "Z2lvbiAtLWltYWdlLWlkICRpbWFnZQoKCQkJCQkjIERlbGV0ZSBzbmFwc2hvdHMKCQkJCQlmb3Ig\n",
+                                            "c25hcCBpbiAkc25hcHM7IGRvCgkJCQkJCWVjaG8gIiQoZGF0ZSArIiVIOiVNOiVTIC0iKSAgICBE\n",
+                                            "ZWxldGluZyBzbmFwc2hvdHMgcmVsYXRlZCB0byAkaW1hZ2U6ICRzbmFwIgoJCQkJCQlhd3MgZWMy\n",
+                                            "IGRlbGV0ZS1zbmFwc2hvdCAtLXJlZ2lvbiAkcmVnaW9uIC0tc25hcHNob3QtaWQgJHNuYXAKCQkJ\n",
+                                            "CQlkb25lCgkJCQllbHNlCgkJCQkJZWNobyAkKGRhdGUgKyIlSDolTTolUyAtIikgJGltYWdlIGRv\n",
+                                            "ZXNuXCd0IGV4cGlyZSB1bnRpbCAkZXhwaXJldGFnCgkJCQlmaQoJCQlmaQoJCWRvbmUKCWZpCgoJ\n",
+                                            "IyBHZXQgbGlzdCBvZiBpbnN0YW5jZXMgdG8gYmUgYmFja2VkIHVwCglpbnN0YW5jZXM9JChhd3Mg\n",
+                                            "ZWMyIGRlc2NyaWJlLWluc3RhbmNlcyAtLW91dHB1dCB0ZXh0IC0tcmVnaW9uICRyZWdpb24gLS1m\n",
+                                            "aWx0ZXJzICJOYW1lPXRhZzokdGFnS2V5LFZhbHVlcz0kdGFnVmFsdWUiIC0tcXVlcnkgJ1Jlc2Vy\n",
+                                            "dmF0aW9uc1sqXS5JbnN0YW5jZXNbKl0ue0lEOkluc3RhbmNlSWR9JykKCglpZiBbICIkaW5zdGFu\n",
+                                            "Y2VzIiA9PSAiIiBdCgl0aGVuCgkJZWNobyAkKGRhdGUgKyIlSDolTTolUyAtIikgTm8gaW5zdGFu\n",
+                                            "Y2VzIHdpdGggdGFnICR0YWdLZXk6JHRhZ1ZhbHVlIGZvdW5kCgllbHNlCQoJCSMgTG9vcCB0aHJv\n",
+                                            "dWdoIGluc3RhbmNlcyBjcmVhdGluZyBpbWFnZXMgYW5kIHRhZ2dpbmcKCQlmb3IgaW5zdGFuY2Ug\n",
+                                            "aW4gJGluc3RhbmNlczsgZG8KCgkJCSMgQ2hlY2sgZm9yIHJlYm9vdCB0YWcKCQkJaWYgWyAiJChh\n",
+                                            "d3MgZWMyIGRlc2NyaWJlLWluc3RhbmNlcyAtLW91dHB1dCB0ZXh0IC0tcmVnaW9uICRyZWdpb24g\n",
+                                            "LS1pbnN0YW5jZS1pZCAkaW5zdGFuY2UgLS1maWx0ZXJzICJOYW1lPXRhZzpCYWNrdXBSZWJvb3Qs\n",
+                                            "VmFsdWVzPXllcyIpIiAhPSAiIiBdCgkJCXRoZW4KCQkJCXJlYm9vdD0iLS1yZWJvb3QiCgkJCWVs\n",
+                                            "c2UKCQkJCXJlYm9vdD0iLS1uby1yZWJvb3QiCgkJCWZpCgkJCWVjaG8gJChkYXRlICsiJUg6JU06\n",
+                                            "JVMgLSIpIENyZWF0aW5nIGltYWdlIGZyb20gJGluc3RhbmNlIHdpdGggJHJlYm9vdAoJCQlhbWk9\n",
+                                            "JChhd3MgZWMyIGNyZWF0ZS1pbWFnZSAtLW91dHB1dCB0ZXh0ICRyZWJvb3QgLS1yZWdpb24gJHJl\n",
+                                            "Z2lvbiAtLWluc3RhbmNlLWlkICRpbnN0YW5jZSAtLW5hbWUgImBkYXRlICslWSVtJWQlSCVNJVNg\n",
+                                            "ICRpbnN0YW5jZSIgLS1kZXNjcmlwdGlvbiAiQmFja3VwIG9mICRpbnN0YW5jZSIpCgoJCQllY2hv\n",
+                                            "ICIkKGRhdGUgKyIlSDolTTolUyAtIikgICAgVGFnZ2luZyBpbWFnZSBvZiAkaW5zdGFuY2U6ICRh\n",
+                                            "bWkiCgkJCWF3cyBlYzIgY3JlYXRlLXRhZ3MgLS1yZWdpb24gJHJlZ2lvbiAtLXRhZ3MgIktleT1F\n",
+                                            "eHBpcmUsVmFsdWU9JGV4cGlyZSIgIktleT1DcmVhdGVkQnksVmFsdWU9YmFja3VwVmlhVGFnIiAi\n",
+                                            "S2V5PU5hbWUsVmFsdWU9YGRhdGUgIislWS8lbS8lZCAlSDolTTolUyJgIEJhY2t1cCBvZiAkaW5z\n",
+                                            "dGFuY2UiIC0tcmVzb3VyY2VzICRhbWkKCQlkb25lCglmaQoKZG9uZQplY2hvIFtDb21wbGV0ZV0K\n"
+                                        ]
+                                    ]
+                                },
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "root"
+                            }
+                        }
+                    }
+                }
+            },
+            "Properties": {
+                "ImageId": "ami-e3106686",
+                "InstanceType": "t2.micro",
+                "KeyName": "supportInstance",
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -xe\n",
+                                "yum update -y aws-cfn-bootstrap\n",
+                                "/opt/aws/bin/cfn-init -v --stack ",{"Ref": "AWS::StackName"}," --resource amiInstance\n",
+                                "base64 -d /tmp/backupViaTag-base64 > /usr/local/bin/backupViaTag\n",
+                                "chmod 744 /usr/local/bin/backupViaTag"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "backupViaTagRoleCFN": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "backupViaTagPolicyCFN": {
+            "Type": "AWS::IAM::ManagedPolicy",
+            "Properties": {
+                "Description": "PolicyallowingactionsforbackupViaTag",
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "backupViaTagPolicyCFN",
+                            "Effect": "Allow",
+                            "Action": [
+                                "ec2: CreateImage",
+                                "ec2: CreateTags",
+                                "ec2: DeleteSnapshot",
+                                "ec2: DeregisterImage",
+                                "ec2: DescribeImages",
+                                "ec2: DescribeInstances",
+                                "ec2: DescribeRegions"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "backupViaTagRoleCFN"
+                    }
+                ]
+            }
+        }
+    }
+}
+
