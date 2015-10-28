@@ -107,7 +107,7 @@ for region in $regions; do
 		for instance in $instances; do
 
 			# Check for reboot tag
-			if [ "`aws ec2 describe-instances --output text --region $region --instance-id $instance --filters "Name=tag:BackupReboot,Values=yes"`" != "" ]
+			if [ "$(aws ec2 describe-instances --output text --region $region --instance-id $instance --filters "Name=tag:BackupReboot,Values=yes")" != "" ]
 			then
 				reboot="--reboot"
 			else
