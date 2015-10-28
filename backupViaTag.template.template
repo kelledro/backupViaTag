@@ -1,0 +1,102 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+        "amiInstance": {
+            "Type": "AWS::EC2::Instance",
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "config": {
+                        "files": {
+                            "/tmp/backupViaTag-base64": {
+                                "content": {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+						<<base64script>>
+                                        ]
+                                    ]
+                                },
+                                "mode": "000644",
+                                "owner": "root",
+                                "group": "root"
+                            }
+                        }
+                    }
+                }
+            },
+            "Properties": {
+                "ImageId": "ami-e3106686",
+                "InstanceType": "t2.micro",
+                "KeyName": "supportInstance",
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -xe\n",
+                                "yum update -y aws-cfn-bootstrap\n",
+                                "/opt/aws/bin/cfn-init -v --stack ",{"Ref": "AWS::StackName"}," --resource amiInstance\n",
+                                "base64 -d /tmp/backupViaTag-base64 > /usr/local/bin/backupViaTag\n",
+                                "chmod 744 /usr/local/bin/backupViaTag"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "backupViaTagRoleCFN": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "backupViaTagPolicyCFN": {
+            "Type": "AWS::IAM::ManagedPolicy",
+            "Properties": {
+                "Description": "PolicyallowingactionsforbackupViaTag",
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "backupViaTagPolicyCFN",
+                            "Effect": "Allow",
+                            "Action": [
+                                "ec2: CreateImage",
+                                "ec2: CreateTags",
+                                "ec2: DeleteSnapshot",
+                                "ec2: DeregisterImage",
+                                "ec2: DescribeImages",
+                                "ec2: DescribeInstances",
+                                "ec2: DescribeRegions"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "backupViaTagRoleCFN"
+                    }
+                ]
+            }
+        }
+    }
+}
+
