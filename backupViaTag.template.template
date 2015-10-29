@@ -11,8 +11,7 @@
                                 "content": {
                                     "Fn::Join": [
                                         "",
-                                        [
-						<<base64script>>
+                                        [<<base64script>>
                                         ]
                                     ]
                                 },
