@@ -113,8 +113,8 @@ aws iam create-role --role-name backupViaTagRole \
 aws iam attach-role-policy --role-name backupViaTagRole \
   --policy-arn arn:aws:iam::$(aws ec2 describe-instances \
   --output text --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
-  --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | rev | cut -c 2- | rev) \
-  --query 'Reservations[0].{AccoundID:OwnerId}'):policy/backupViaTagPolicy
+  --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone \
+  | rev | cut -c 2- | rev) --query 'Reservations[0].{AccoundID:OwnerId}'):policy/backupViaTagPolicy
 ```
 #### CLI command to create an instance profile
 ```
