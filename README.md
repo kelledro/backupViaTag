@@ -108,10 +108,13 @@ aws iam create-role --role-name backupViaTagRole \
   \"Effect\":\"Allow\",\"Principal\":{\"Service\": \
   \"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
 ```
-#### CLI command to attach role to policy where 12345678912 is your AWS Account ID
+#### CLI command to attach the role to the policy 
 ```
 aws iam attach-role-policy --role-name backupViaTagRole \
-  --policy-arn arn:aws:iam::123456789012:policy/backupViaTagPolicy
+  --policy-arn arn:aws:iam::$(aws ec2 describe-instances \
+  --output text --instance-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
+  --region $(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | rev | cut -c 2- | rev) \
+  --query 'Reservations[0].{AccoundID:OwnerId}'):policy/backupViaTagPolicy
 ```
 #### CLI command to create an instance profile
 ```
