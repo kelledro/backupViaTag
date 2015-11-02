@@ -18,11 +18,11 @@ Each time the script is run, it will look for expired backups and remove them. T
 
 ## Usage
 ### Quick examples
-Backup instances tagged Backup:ProductionDaily with an expiry of 30 days:
+Backup instances tagged Backup:prodDaily with an expiry of 30 days:
 
 `backupViaTag -t Backup:prodDaily -e "30 days"`
 
-Backup instances tagged Backup:ProductionWeekly with an expiry of 6 months:
+Backup instances tagged Backup:prodWeekly with an expiry of 6 months:
 
 `backupViaTag -t Backup:prodWeekly -e "6 months"`
 
@@ -51,10 +51,10 @@ Cron jobs for the above example look like:
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
 
-# Daily backup at 11pm for instances tagged Backup:ProductionDaily with an expiry of 30 days
+# Daily backup at 11pm for instances tagged Backup:prodDaily with an expiry of 30 days
 0 23 *  *  *  * ec2-user backupViaTag -t Backup:prodDaily -e "30 days"
 
-# Weekly backup on Sunday at 3am for instances tagged Backup:ProductionWeekly with an expiry of 6 months
+# Weekly backup on Sunday at 3am for instances tagged Backup:prodWeekly with an expiry of 6 months
 0 3  *  *  *  7 ec2-user backupViaTag -t Backup:prodWeekly -e "6 months"
 
 ```
