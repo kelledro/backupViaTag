@@ -108,7 +108,7 @@ aws iam create-role --role-name backupViaTagRole \
   \"Effect\":\"Allow\",\"Principal\":{\"Service\": \
   \"ec2.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
 ```
-#### CLI command to attach the role to the policy 
+#### CLI command to attach the policy to the role
 ```
 aws iam attach-role-policy --role-name backupViaTagRole \
   --policy-arn arn:aws:iam::$(aws ec2 describe-instances \
